@@ -19,7 +19,7 @@ for event, element in etree.iterparse('output.xml', tag="host"):
             parsedServers.append([child.attrib['addr'], 'port', 'port'])
         if child.tag == 'ports':
             for a in child:
-                print('yea')
+                pass
 print(parsedServers)
 app = Flask(__name__)
 
