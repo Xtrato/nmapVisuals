@@ -6,54 +6,53 @@ from lxml import etree
 #Parses the scan log and orders the data into a list
 port = None
 address = None
-parsedServers = []
-#Iterates through the masscan XML file.
+parsedServers = {}
+
+#Iterates through the masscan XML file. Filters duplicates and stores IP's in dict with accompianing ports.
 for event, element in etree.iterparse('output.xml', tag="host"):
     for child in element:
         if child.tag == 'address':
-            #Assigns the current iterations address to the address variable.
-            exists = False
-            for entry in parsedServers:
-                if child.attrib['addr'] in entry:
-                    exists = True
-            parsedServers.append([child.attrib['addr'], 'port', 'port'])
+            ipAddress = child.attrib['addr']
         if child.tag == 'ports':
-            for a in child:
-                pass
-print(parsedServers)
+            for subChild in child:
+                port = [subChild.attrib['portid']]
+
+    if ipAddress in parsedServers:
+        portList = parsedServers[ipAddress]
+        portList.append(port)
+        parsedServers[ipAddress] = portList
+    else:
+        parsedServers[ipAddress] = [port]
+
+
 app = Flask(__name__)
 
-
+#Calculates the range of ports on devices. Used to produce the heatmap.
 upperServiceRange = 0
-#get the port open per serice. If more than upperServiceRange then ports = upperServiceRange
+for key, value in parsedServers.items():
+    if upperServiceRange < len(value):
+        upperServiceRange = len(value)
 
 
 
 
-count = 1
+count = 0
 
-with open('data.csv', 'r') as csvfile:
-
-    reader = csv.reader(csvfile)
-    your_list = list(reader)
-
-print(math.sqrt(len(your_list)))
+print(math.sqrt(len(parsedServers)))
 htmlBuffer = Markup('')
 
-for entry in your_list:
-    if '1' in entry[1]:
-      if count > int(math.sqrt(len(your_list))):
-        count = 0
-        htmlBuffer += Markup('<td>1 END</td></tr><tr>')
-      else:
-          htmlBuffer += Markup('<td>1</td>')
+for key, value in parsedServers.items():
+    if len(value) < 2:
+        htmlBuffer += Markup('<td bgcolor="blue">' + str(key) + str(count) + '</td>')
+    if len(value) == 2:
+        htmlBuffer += Markup('<td bgcolor="yellow">' + str(key) + str(count) + '</td>')
     else:
-      if count > int(math.sqrt(len(your_list))):
+        htmlBuffer += Markup('<td bgcolor="red">' + str(key) + str(count) + '</td>')
+    count += 1
+    #if count > int(math.sqrt(len(parsedServers))):
+    if count > 6:
+        htmlBuffer += Markup('</tr><tr>')
         count = 0
-        htmlBuffer += Markup('<td>0 END</td></tr><tr>')
-      else:
-          htmlBuffer += Markup('<td>0</td>')
-    count = count + 1
 
 @app.route('/')
 def index():
