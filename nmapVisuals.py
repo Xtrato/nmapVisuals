@@ -27,6 +27,7 @@ for event, element in etree.iterparse('output.xml', tag="host"):
 
 app = Flask(__name__)
 
+
 #Calculates the range of ports on devices. Used to produce the heatmap.
 upperServiceRange = 0
 for key, value in parsedServers.items():
@@ -34,7 +35,32 @@ for key, value in parsedServers.items():
         upperServiceRange = len(value)
 
 
+#Finds the IP Range
+splitValue = 5
+binaryAddress = ''
+for key in parsedServers.items():
+    octets = key[0].split('.')
+    for octet in octets:
+        binaryOctet = "{0:b}".format(int(octet))
+        print(octet)
 
+
+
+    print(octets)
+
+
+print('##########')
+print('##########')
+
+
+
+
+
+
+
+print('################')
+print(splitValue)
+print('################')
 
 count = 0
 
@@ -43,11 +69,11 @@ htmlBuffer = Markup('')
 
 for key, value in parsedServers.items():
     if len(value) < 2:
-        htmlBuffer += Markup('<td bgcolor="blue">' + str(key) + str(count) + '</td>')
+        htmlBuffer += Markup('<td bgcolor="9fd1ff">' + str(key) + '</td>')
     if len(value) == 2:
-        htmlBuffer += Markup('<td bgcolor="yellow">' + str(key) + str(count) + '</td>')
-    else:
-        htmlBuffer += Markup('<td bgcolor="red">' + str(key) + str(count) + '</td>')
+        htmlBuffer += Markup('<td bgcolor="fff99f">' + str(key) + '</td>')
+    if len(value) > 2:
+        htmlBuffer += Markup('<td bgcolor="ff9f9f">' + str(key) + '</td>')
     count += 1
     #if count > int(math.sqrt(len(parsedServers))):
     if count > 6:
@@ -59,4 +85,4 @@ def index():
     return render_template('index.html', name=htmlBuffer)
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug = True)
