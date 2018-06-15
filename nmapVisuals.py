@@ -37,29 +37,31 @@ for key, value in parsedServers.items():
 
 #Finds the IP Range
 splitValue = 5
-binaryAddress = ''
+binaryList = []
 for key in parsedServers.items():
+    binaryOctet = ''
     octets = key[0].split('.')
     for octet in octets:
-        binaryOctet = "{0:b}".format(int(octet))
-        print(octet)
+        binaryOctet += format(int(octet), '008b')
+    binaryList.append(binaryOctet)
 
 
-
-    print(octets)
-
-
-print('##########')
-print('##########')
-
-
-
-
-
+print(binaryList[0][0])
+found = False
+lastIteration = binaryList[0][0]
+for bitIndex in range(32):
+    for address in binaryList:
+        if address[bitIndex] != lastIteration:
+            bitDelimeter = bitIndex
+            found = True
+            break
+    if found:
+        break
+        lastIteration = address[bitIndex]
 
 
 print('################')
-print(splitValue)
+print(bitDelimeter)
 print('################')
 
 count = 0
