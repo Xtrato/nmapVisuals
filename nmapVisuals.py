@@ -36,33 +36,69 @@ for key, value in parsedServers.items():
 
 
 #Finds the IP Range
-splitValue = 5
-binaryList = []
+firstOctetRange = []
+secondOctetRange = []
+thirdOctetRange = []
+forthOctetRange = []
+bitDelimeter = 0
+startingIP = 0
+endingIP = 0
 for key in parsedServers.items():
     binaryOctet = ''
     octets = key[0].split('.')
-    for octet in octets:
-        binaryOctet += format(int(octet), '008b')
-    binaryList.append(binaryOctet)
+    firstOctetRange.append(int(octets[0]))
+    secondOctetRange.append(int(octets[1]))
+    thirdOctetRange.append(int(octets[2]))
+    forthOctetRange.append(int(octets[3]))
+if min(firstOctetRange) != max(firstOctetRange):
+    bitDelimeter = 0
+elif min(secondOctetRange) != max(secondOctetRange):
+    bitDelimeter = 1
+elif min(thirdOctetRange) != max(thirdOctetRange):
+    bitDelimeter = 2
+elif min(forthOctetRange) != max(forthOctetRange):
+    bitDelimeter = 3
+
+if bitDelimeter == 0:
+    for one in range(min(firstOctetRange), max(firstOctetRange)):
+        for two in range(256):
+            for three in range(256):
+                for four in range(256):
+                    ip = "192.168.%d.%d" % (one, two, three, four)
+                    print(ip)
+if bitDelimeter == 1:
+    for one in range(min(secondOctetRange), max(secondOctetRange)):
+        for two in range(min(secondOctetRange), max(secondOctetRange)):
+            for three in range(256):
+                for four in range(256):
+                    ip = "192.168.%d.%d" % (one, two, three, four)
+                    print(ip)
+if bitDelimeter == 2:
+    for one in range(min(firstOctetRange), max(firstOctetRange)):
+        for two in range(min(secondOctetRange), max(secondOctetRange)):
+            for three in range(min(thirdOctetRange), max(thirdOctetRange)):
+                for four in range(256):
+                    ip = "192.168.%d.%d" % (one, two, three, four)
+                    print(ip)
+if bitDelimeter == 3:
+    minimumValue = int(min(firstOctetRange))
+    maximumValue = int(max(firstOctetRange))
+    for one in range(minimumValue, maximumValue):
+        for two in range(minimumValue, maximumValue):
+            for three in range(minimumValue, maximumValue):
+                for four in range(minimumValue, maximumValue):
+                    ip = "192.168.%d.%d" % (one, two, three, four)
+                    print(ip)
 
 
-print(binaryList[0][0])
-found = False
-lastIteration = binaryList[0][0]
-for bitIndex in range(32):
-    for address in binaryList:
-        if address[bitIndex] != lastIteration:
-            bitDelimeter = bitIndex
-            found = True
-            break
-    if found:
-        break
-        lastIteration = address[bitIndex]
-
-
-print('################')
+print('!!!!!!!!!!!!!!!!!!!!!!')
 print(bitDelimeter)
-print('################')
+print('!!!!!!!!!!!!!!!!!!!!!!')
+
+print(firstOctetRange)
+print(secondOctetRange)
+print(thirdOctetRange)
+print(forthOctetRange)
 
 count = 0
 
