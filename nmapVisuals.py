@@ -61,39 +61,32 @@ elif min(forthOctetRange) != max(forthOctetRange):
 
 if bitDelimeter == 0:
     for one in range(min(firstOctetRange), max(firstOctetRange)):
-        for two in range(256):
-            for three in range(256):
-                for four in range(256):
-                    ip = "192.168.%d.%d" % (one, two, three, four)
+        for two in range(0, 256):
+            for three in range(0, 256):
+                for four in range(0, 256):
+                    ip = "%d.%d.%d.%d" % (one, two, three, four)
                     print(ip)
 if bitDelimeter == 1:
-    for one in range(min(secondOctetRange), max(secondOctetRange)):
-        for two in range(min(secondOctetRange), max(secondOctetRange)):
-            for three in range(256):
-                for four in range(256):
-                    ip = "192.168.%d.%d" % (one, two, three, four)
-                    print(ip)
+    one = min(firstOctetRange)
+    for two in range(min(secondOctetRange), max(secondOctetRange)):
+        for three in range(0, 256):
+            for four in range(0, 256):
+                ip = "%d.%d.%d.%d" % (one, two, three, four)
+                print(ip)
 if bitDelimeter == 2:
-    for one in range(min(firstOctetRange), max(firstOctetRange)):
-        for two in range(min(secondOctetRange), max(secondOctetRange)):
-            for three in range(min(thirdOctetRange), max(thirdOctetRange)):
-                for four in range(256):
-                    ip = "192.168.%d.%d" % (one, two, three, four)
-                    print(ip)
+    one = min(firstOctetRange)
+    two = min(secondOctetRange)
+    for three in range(min(thirdOctetRange), max(thirdOctetRange)):
+        for four in range(0, 256):
+            ip = "%d.%d.%d.%d" % (one, two, three, four)
+            print(ip)
 if bitDelimeter == 3:
-    minimumValue = int(min(firstOctetRange))
-    maximumValue = int(max(firstOctetRange))
-    for one in range(minimumValue, maximumValue):
-        for two in range(minimumValue, maximumValue):
-            for three in range(minimumValue, maximumValue):
-                for four in range(minimumValue, maximumValue):
-                    ip = "192.168.%d.%d" % (one, two, three, four)
-                    print(ip)
-
-
-print('!!!!!!!!!!!!!!!!!!!!!!')
-print(bitDelimeter)
-print('!!!!!!!!!!!!!!!!!!!!!!')
+    one = min(firstOctetRange)
+    two = min(secondOctetRange)
+    three = min(thirdOctetRange)
+    for four in range(min(forthOctetRange), max(forthOctetRange)):
+            ip = "%d.%d.%d.%d" % (one, two, three, four)
+            print(ip)
 
 print(firstOctetRange)
 print(secondOctetRange)
