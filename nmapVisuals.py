@@ -1,3 +1,5 @@
+#Tool used to create a visual representation on nmap and masscan outputs.
+
 import csv
 import math
 from flask import Flask, render_template, Markup
@@ -5,7 +7,6 @@ from lxml import etree
 import collections
 
 #Constructor
-
 port = None
 address = None
 parsedServers = collections.OrderedDict()
@@ -19,6 +20,7 @@ for event, element in etree.iterparse('output.xml', tag="host"):
     for child in element:
         if child.tag == 'address':
             ipList.append(child.attrib['addr'])
+
 
 #iterates through ipList splits each IP into octets
 firstOctetRange = []
@@ -49,7 +51,7 @@ elif min(forthOctetRange) != max(forthOctetRange):
 
 #Creates a ordered Dict which contains all IP addresses in the range taken from the log file.
 if bitDelimeter == 0:
-    for one in range(min(firstOctetRange), max(firstOctetRange)):
+    for one in range(min(firstOctetRange), max(firstOctetRange) + 1):
         for two in range(0, 256):
             for three in range(0, 256):
                 for four in range(0, 256):
@@ -57,7 +59,7 @@ if bitDelimeter == 0:
                     parsedServers[ip] = []
 if bitDelimeter == 1:
     one = min(firstOctetRange)
-    for two in range(min(secondOctetRange), max(secondOctetRange)):
+    for two in range(min(secondOctetRange), max(secondOctetRange) + 1):
         for three in range(0, 256):
             for four in range(0, 256):
                 ip = "%d.%d.%d.%d" % (one, two, three, four)
@@ -65,7 +67,7 @@ if bitDelimeter == 1:
 if bitDelimeter == 2:
     one = min(firstOctetRange)
     two = min(secondOctetRange)
-    for three in range(min(thirdOctetRange), max(thirdOctetRange)):
+    for three in range(min(thirdOctetRange), max(thirdOctetRange) + 1):
         for four in range(0, 256):
             ip = "%d.%d.%d.%d" % (one, two, three, four)
             parsedServers[ip] = []
@@ -79,9 +81,7 @@ if bitDelimeter == 3:
 
 
 
-
 #Iterates through the masscan XML file. Filters duplicates and adds the ports to parsedServers orderedDict.
-
 for event, element in etree.iterparse('output.xml', tag="host"):
     for child in element:
         if child.tag == 'address':
@@ -110,11 +110,11 @@ htmlBuffer = Markup('')
 
 for key, value in parsedServers.items():
     if len(value) < 2:
-        htmlBuffer += Markup('<td height="10", width="10", class="tooltip", bgcolor="9fd1ff"><span class="tooltiptext">' + str(key) + '</span></td>')
+        htmlBuffer += Markup('<td height="5", width="5", class="tooltip", bgcolor="9fd1ff"><span class="tooltiptext">' + str(key) + '</span></td>')
     if len(value) == 2:
-        htmlBuffer += Markup('<td height="10", width="10", class="tooltip", bgcolor="fff99f"><span class="tooltiptext">' + str(key) + '</span></td>')
+        htmlBuffer += Markup('<td height="5", width="5", class="tooltip", bgcolor="fff99f"><span class="tooltiptext">' + str(key) + '</span></td>')
     if len(value) > 2:
-        htmlBuffer += Markup('<td height="10", width="10", class="tooltip", bgcolor="ff9f9f"><span class="tooltiptext">' + str(key) + '</span></td>')
+        htmlBuffer += Markup('<td height="5", width="5", class="tooltip", bgcolor="ff9f9f"><span class="tooltiptext">' + str(key) + '</span></td>')
     count += 1
     if count > math.sqrt(len(parsedServers)):
         htmlBuffer += Markup('</tr><tr>')
@@ -125,4 +125,7 @@ def index():
     return render_template('index.html', name=htmlBuffer)
 
 if __name__ == '__main__':
-    app.run(debug = True)
+    app.run()
+
+
+###NOTES masscan 84.45.0.0/21 --top-ports 200 -oX test.xml
