@@ -1,6 +1,5 @@
 #Tool used to create a visual representation on nmap and masscan outputs.
 
-import csv
 import math
 from flask import Flask, render_template, Markup
 from lxml import etree
