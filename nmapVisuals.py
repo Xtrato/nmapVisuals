@@ -94,12 +94,6 @@ for event, element in etree.iterparse('output.xml', tag="host"):
 
 app = Flask(__name__)
 
-#Calculates the range of ports on devices. Used to produce the heatmap.
-upperServiceRange = 0
-for key, value in parsedServers.items():
-    if upperServiceRange < len(value):
-        upperServiceRange = len(value)
-
 
 count = 0
 htmlBuffer = Markup('')
