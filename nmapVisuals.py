@@ -103,18 +103,17 @@ for key, value in parsedServers.items():
 
 
 count = 0
-print(math.sqrt(len(parsedServers)))
 htmlBuffer = Markup('')
-
-
-
+#Iterates through the IP range that was scanned into paesedServers dict. creates an infoString on each iteration containing the IP and open ports.
+#This is then appeneded into a htmlBuffer within a HTML table and passed to render_template to generate the page through flask.
 for key, value in parsedServers.items():
-    if len(value) < 2:
-        htmlBuffer += Markup('<td height="5", width="5", class="tooltip", bgcolor="9fd1ff"><span class="tooltiptext">' + str(key) + '</span></td>')
-    if len(value) == 2:
-        htmlBuffer += Markup('<td height="5", width="5", class="tooltip", bgcolor="fff99f"><span class="tooltiptext">' + str(key) + '</span></td>')
-    if len(value) > 2:
-        htmlBuffer += Markup('<td height="5", width="5", class="tooltip", bgcolor="ff9f9f"><span class="tooltiptext">' + str(key) + '</span></td>')
+    infoString = str(key) + '<br>'
+    if value:
+        infoString += 'Ports:'
+        for portValue in value:
+            infoString += str(portValue) + ','
+    colourRange = ['94A5FF', '0024E5', '2422C5', '4821A6', '6D1F87', '911E67', 'B61C48', 'DA1B29', 'FF1A0A']
+    htmlBuffer += Markup('<td class="tooltip", bgcolor="' + colourRange[len(value)] + '"><span class="tooltiptext">' + infoString + '</span></td>')
     count += 1
     if count > math.sqrt(len(parsedServers)):
         htmlBuffer += Markup('</tr><tr>')
@@ -126,6 +125,3 @@ def index():
 
 if __name__ == '__main__':
     app.run()
-
-
-###NOTES masscan 84.45.0.0/21 --top-ports 200 -oX test.xml
